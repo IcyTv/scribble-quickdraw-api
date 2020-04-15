@@ -1,0 +1,272 @@
+openapi: 3.0.0
+info:
+  title: Users API
+  version: '1.0'
+  description: API Route for handling users
+  license:
+    name: MIT
+  contact:
+    name: Michael Finger
+    email: michael.finger@icytv.de
+    url: 'https://github.com/IcyTv/scribble-quickdraw-api'
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  '/api/users/{username}':
+    parameters:
+      - schema:
+          type: string
+        name: username
+        in: path
+        required: true
+    get:
+      summary: Get user information
+      tags:
+        - users
+      responses:
+        '200':
+          description: OK
+      operationId: get-user-info
+      description: 'Get user info, needs user-info or admin permission or to be self'
+      security:
+        - JWT: []
+  /api/users/login:
+    post:
+      summary: Login existing user
+      operationId: post-users-login
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jwt:
+                    type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exception:
+                    type: string
+              examples:
+                example:
+                  value:
+                    exception: Username/Password is wrong
+      description: Login endpoint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+            examples:
+              example:
+                value:
+                  username: test
+                  password: password
+        description: Username and password of user
+      security: []
+      tags:
+        - users
+    parameters: []
+  /api/users/register:
+    post:
+      summary: Register new user
+      operationId: post-users-register
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jwt:
+                    type: string
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exception:
+                    type: string
+              examples:
+                response:
+                  value:
+                    exception: User with that name already exists
+      description: Register users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+            examples:
+              example:
+                value:
+                  username: test
+                  password: test
+        description: Username and password of user
+      security: []
+      tags:
+        - users
+    parameters: []
+  /api/users/refresh:
+    get:
+      summary: Refresh existing jwt token
+      tags:
+        - users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jwt:
+                    type: string
+      operationId: get-api-users-refresh
+      description: Refreshes a users JWT token
+      security:
+        - JWT: []
+      parameters: []
+  /api/users/list:
+    get:
+      summary: List all registered users
+      tags:
+        - users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+              examples: {}
+      operationId: get-users-list
+      security:
+        - JWT: []
+      parameters: []
+      description: 'List all registered users, needs user-info or admin permission'
+    parameters: []
+  '/api/users/change-password/{username}':
+    post:
+      summary: Reset Users Password
+      operationId: put-api-users-reset-password
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: Wrong permissions and not self
+          content:
+            application/json:
+              schema:
+                type: string
+      description: Change a users password. Requires to be the user or to have user-edit scope
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+        description: New Password
+      security:
+        - JWT: []
+      tags:
+        - users
+    parameters:
+      - schema:
+          type: string
+        name: username
+        in: path
+        required: true
+  '/api/users/scope/{scope}':
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  scope:
+                    type: string
+                  has:
+                    type: boolean
+                required:
+                  - scope
+                  - has
+        '401':
+          description: Unauthorized
+      operationId: get-api-users-scope
+      description: Check if the user has passed scope
+      security:
+        - JWT: []
+    parameters:
+      - schema:
+          type: string
+        name: scope
+        in: path
+        required: true
+components:
+  schemas:
+    User:
+      type: object
+      title: User Object
+      additionalProperties: false
+      x-examples:
+        example:
+          id: 1
+          name: test
+          hash: pw hash
+          ips:
+            - 127.0.0.1
+      description: User object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        hash:
+          type: string
+        ips:
+          type: array
+          items:
+            type: string
+        permissions:
+          type: number
+      required:
+        - id
+        - name
+        - hash
+        - ips
+        - permissions
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      description: JWT token
+      bearerFormat: JWT

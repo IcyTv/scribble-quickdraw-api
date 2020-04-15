@@ -1,0 +1,111 @@
+openapi: 3.0.0
+info:
+  title: Rooms
+  version: '1.0'
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  '/api/rooms/users/{room}':
+    get:
+      summary: List users in room
+      tags: []
+      responses:
+        '200':
+          description: On success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  room:
+                    type: integer
+                  users:
+                    type:
+                      - string
+                      - array
+                    items:
+                      type: object
+                      properties:
+                        user:
+                          $ref: '../Users/Users.v1.yaml#/components/schemas/User'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      operationId: get-api-rooms-users
+      description: Get all users in Room
+      security:
+        - JWT: []
+    parameters:
+      - schema:
+          type: integer
+        name: room
+        in: path
+        required: true
+  '/api/rooms/add/{username}':
+    get:
+      summary: Add user to room
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                  exception:
+                    type: string
+      operationId: get-api-rooms-add
+      description: 'Add user to room, requires to be self or to have the room-edit permission'
+      requestBody:
+        description: ''
+      security:
+        - JWT: []
+    parameters:
+      - schema:
+          type: string
+        name: username
+        in: path
+        required: true
+  '/api/rooms/remove/{room}':
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-api-rooms-remove
+      description: 'Delete entire room, requires room-edit'
+      security:
+        - JWT: []
+    parameters:
+      - schema:
+          type: integer
+        name: room
+        in: path
+        required: true
+  '/api/rooms/remove/{username}/{room}':
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-api-rooms-remove
+      description: 'Remove a user from the specified room, requires room-edit permission or to be self'
+    parameters:
+      - schema:
+          type: integer
+        name: room
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: username
+        in: path
+        required: true
+components:
+  schemas: {}
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
