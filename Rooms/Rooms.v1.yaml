@@ -73,12 +73,13 @@ paths:
           type: string
         name: username
         in: path
-        required: true
+        description: 'Username of user to add, if empty this is self'
       - schema:
           type: integer
         name: room
         in: path
         required: true
+        description: Room number to add user to
   '/api/rooms/remove/{room}':
     get:
       summary: Remove room
