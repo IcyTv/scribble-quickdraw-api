@@ -211,15 +211,25 @@ paths:
           content:
             application/json:
               schema:
+                oneOf:
+                  - properties:
+                      scope:
+                        type: string
+                      has:
+                        type: boolean
+                    required:
+                      - scope
+                      - has
+                  - properties:
+                      scopes:
+                        type: array
+                        items:
+                          type: string
                 type: object
-                properties:
-                  scope:
-                    type: string
-                  has:
-                    type: boolean
-                required:
-                  - scope
-                  - has
+            application/xml:
+              schema:
+                type: object
+                properties: {}
         '401':
           description: Unauthorized
       operationId: get-api-users-scope
@@ -231,7 +241,6 @@ paths:
           type: string
         name: scope
         in: path
-        required: true
 components:
   schemas:
     User:
