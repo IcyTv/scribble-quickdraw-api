@@ -233,7 +233,7 @@ paths:
         '401':
           description: Unauthorized
       operationId: get-api-users-scope
-      description: Check if the user has passed scope
+      description: Check if the user has scope or returns all scopes
       security:
         - JWT: []
     parameters:

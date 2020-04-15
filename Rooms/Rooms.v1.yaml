@@ -44,7 +44,7 @@ paths:
         name: room
         in: path
         required: true
-  '/api/rooms/add/{username}':
+  '/api/rooms/add/{room}/{username}':
     get:
       summary: Add user to room
       tags:
@@ -72,6 +72,11 @@ paths:
       - schema:
           type: string
         name: username
+        in: path
+        required: true
+      - schema:
+          type: integer
+        name: room
         in: path
         required: true
   '/api/rooms/remove/{room}':
