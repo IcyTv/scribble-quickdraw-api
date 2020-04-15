@@ -90,7 +90,7 @@ paths:
         name: room
         in: path
         required: true
-  '/api/rooms/remove/{username}/{room}':
+  '/api/rooms/remove/{room}/{username}':
     get:
       summary: Remove user from room
       tags:

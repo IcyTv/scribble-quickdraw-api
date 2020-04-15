@@ -202,8 +202,9 @@ paths:
         required: true
   '/api/users/scope/{scope}':
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: User scope
+      tags:
+        - users
       responses:
         '200':
           description: OK
@@ -264,6 +265,8 @@ components:
         - hash
         - ips
         - permissions
+      x-tags:
+        - users
   securitySchemes:
     JWT:
       type: http
