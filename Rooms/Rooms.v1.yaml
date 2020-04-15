@@ -8,7 +8,9 @@ paths:
   '/api/rooms/users/{room}':
     get:
       summary: List users in room
-      tags: []
+      tags:
+        - rooms
+        - users
       responses:
         '200':
           description: On success
@@ -45,7 +47,9 @@ paths:
   '/api/rooms/add/{username}':
     get:
       summary: Add user to room
-      tags: []
+      tags:
+        - rooms
+        - users
       responses:
         '200':
           description: OK
@@ -72,8 +76,9 @@ paths:
         required: true
   '/api/rooms/remove/{room}':
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: Remove room
+      tags:
+        - rooms
       responses: {}
       operationId: get-api-rooms-remove
       description: 'Delete entire room, requires room-edit'
@@ -87,10 +92,12 @@ paths:
         required: true
   '/api/rooms/remove/{username}/{room}':
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: Remove user from room
+      tags:
+        - rooms
+        - users
       responses: {}
-      operationId: get-api-rooms-remove
+      operationId: get-api-rooms-remove-user
       description: 'Remove a user from the specified room, requires room-edit permission or to be self'
     parameters:
       - schema:
